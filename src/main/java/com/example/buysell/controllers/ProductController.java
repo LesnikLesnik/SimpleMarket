@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,8 +17,8 @@ public class ProductController {
 
 
     @GetMapping("/")
-    public String products(Model model) {
-        model.addAttribute("products", PRODUCT_SERVICE.listProducts()); //передаем список всех товаров по ключу
+    public String products(@RequestParam(name = "title", required = false) String title, Model model) {
+        model.addAttribute("products", PRODUCT_SERVICE.listProducts(title)); //передаем список всех товаров если title не задан, или вернет отсортированный
         return "products";
     }
 

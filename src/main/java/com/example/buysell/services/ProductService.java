@@ -20,7 +20,7 @@ public class ProductService {
 
     public List<Product> listProducts(String title) {
         List<Product> products = productRepo.findAll();
-        if (title != null) productRepo.findByTitle(title);
+        if (title != null) return productRepo.findByTitle(title);
         return products;
     } //получение всего листа товаров
 
