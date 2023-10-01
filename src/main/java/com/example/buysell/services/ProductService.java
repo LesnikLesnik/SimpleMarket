@@ -28,20 +28,17 @@ public class ProductService {
     } //получение всего листа товаров
 
     public void saveProduct(Product product, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
-        Image image1;
-        Image image2;
-        Image image3;
-        if (file1.getSize() != 0){ //если фото имеется, преобразовываем из мультипарт в фото
-            image1.toImageEntity(file1);
+        Image image1 = toImageEntity(file1);
+        Image image2 = toImageEntity(file2);
+        Image image3 = toImageEntity(file3);
+        if (file1.getSize() != 0) { //если фото имеется, преобразовываем из мультипарт в фото
             image1.setPreviewImage(true);
             product.addImageToProduct(image1);
         }
-        if (file2.getSize() != 0){
-            image2.toImageEntity(file2);
+        if (file2.getSize() != 0) {
             product.addImageToProduct(image2);
         }
-        if (file3.getSize() != 0){
-            image3.toImageEntity(file3);
+        if (file3.getSize() != 0) {
             product.addImageToProduct(image3);
         }
         log.info("Saving new Product. Title: {}; Author: {}", product.getTitle(), product.getAuthor());
@@ -50,7 +47,7 @@ public class ProductService {
         productRepo.save(product); //сохраняем уже с фото
     } //сохранение товара в листе товаров
 
-    private Image toImageEntity(MultipartFile file) throws IOException {
+    public Image toImageEntity(MultipartFile file) throws IOException {
         Image image = new Image();
         image.setName(file.getName());
         image.setOriginalFileName(file.getOriginalFilename());

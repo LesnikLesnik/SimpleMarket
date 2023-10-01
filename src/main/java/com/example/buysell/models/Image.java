@@ -19,15 +19,16 @@ public class Image {
     private Long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "original_file_name")
+    @Column(name = "originalFileName")
     private String originalFileName;
     @Column(name = "size")
     private Long size;
-    @Column(name = "content_type")
+    @Column(name = "contentType")
     private String contentType; //расширение файла
-    @Column(name = "is_preview_image")
+    @Column(name = "isPreviewImage")
     private boolean isPreviewImage;
     @Lob //означает что данное поле в БД будет храниться в типе LONGBLOG
+    @Column(name = "bytes", columnDefinition = "longblob")
     private byte[] bytes;
 /*
 Hibernate преобразует в For in key по которому мы сможем получить товар из фотографий

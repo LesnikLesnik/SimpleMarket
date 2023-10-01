@@ -35,7 +35,8 @@ public class Product {
     @Column(name = "author")
     private String author;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
+            mappedBy = "product")
     private List<Image> images = new ArrayList<>();
 
     private Long previewImageId; //чтобы не обращаться к списку выше и чтобы получить превьюшную фото сразу при загрузке товара
