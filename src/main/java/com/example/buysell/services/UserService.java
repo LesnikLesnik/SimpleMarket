@@ -24,6 +24,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword())); //шифруем пароль
         user.getRoles().add(Role.USER);
         log.info("Saving new User with email: {}", email);
+        userRepo.save(user);
         return true;
     }
 }
