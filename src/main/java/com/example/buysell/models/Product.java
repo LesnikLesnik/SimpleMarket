@@ -32,15 +32,15 @@ public class Product {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "author")
-    private String author;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
             mappedBy = "product")
     private List<Image> images = new ArrayList<>();
 
     private Long previewImageId; //чтобы не обращаться к списку выше и чтобы получить превьюшную фото сразу при загрузке товара
 
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn
+    private User user;
     private LocalDateTime dateOfCreated;
 
     private void init(){
