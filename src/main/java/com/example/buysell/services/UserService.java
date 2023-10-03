@@ -9,7 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 //прописываем базовую логику регистрации
 @Service
@@ -24,7 +28,7 @@ public class UserService {
         if (userRepo.findByEmail(email) != null) return false;
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword())); //шифруем пароль
-        user.getRoles().add(Role.ADMIN);
+        user.getRoles().add(Role.USER);
         log.info("Saving new User with email: {}", email);
         userRepo.save(user);
         return true;
@@ -35,11 +39,29 @@ public class UserService {
     } //передаем список всем пользователей
 
     public void banUser(Long id) {
-        User user = userRepo.findById(id).orElse(null);
+        User user = userRepo.findById(id).orElse(null); //находим пользователя по айди
         if (user != null) {
-            user.setActive(false);
-            log.info("Ban user with id = {}; email: {}", user.getId(), user.getEmail());
+            if (user.isActive()) { //если юзер активен
+                user.setActive(false); //ставим активность на 0 (бан)
+                log.info("Ban user with id = {}; email: {}", user.getId(), user.getEmail());
+            } else {
+                user.setActive(true); //ставим активность на 1 (разбан)
+                log.info("Unban user with id = {}; email: {}", user.getId(), user.getEmail());
+            }
         }
         userRepo.save(user);
     } //устанавливаем активность пользователя на false, что деактивирует его возможность делать что-то
+
+    public void changeUserRoles(User user, Map<String, String> form) {
+        Set<String> roles = Arrays.stream(Role.values()) //проходимся по всем ролям
+                .map(Role::name) //для каждой роли из коллекции выше мы вызываем метод name (преобразуем в строку)
+                .collect(Collectors.toSet()); //преобразование всех ролей в сэт из строк
+        user.getRoles().clear(); //очищаем все роли
+        for (String key : form.keySet()){
+            if (roles.contains(key)){ //если роль содержит ту "роль", которую мы передаем в Мэп
+                user.getRoles().add(Role.valueOf(key)); //тогда добавляем ее пользователю
+            }
+        }
+        userRepo.save(user); //сохраняем в репозитории обновленные данные
+    }
 }
