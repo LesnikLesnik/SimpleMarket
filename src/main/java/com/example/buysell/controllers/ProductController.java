@@ -21,9 +21,10 @@ public class ProductController {
 
 
     @GetMapping("/")
-    public String products(@RequestParam(name = "title", required = false) String title, Principal principal, Model model) {
+    public String products(@RequestParam(name = "searchWord", required = false) String title, Principal principal, Model model) {
         model.addAttribute("products", PRODUCT_SERVICE.listProducts(title)); //передаем список всех товаров если title не задан, или вернет отсортированный
         model.addAttribute("user", PRODUCT_SERVICE.getUserByPrincipal(principal));
+        model.addAttribute("searchWord", title);
         return "products";
     }
 
