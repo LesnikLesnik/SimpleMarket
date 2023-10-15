@@ -2,7 +2,7 @@ package com.example.buysell.controllers;
 
 
 import com.example.buysell.entity.User;
-import com.example.buysell.services.UserService;
+import com.example.buysell.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @GetMapping("/login")
     public String login(){
@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping("/registration")
     public String createUser(User user, Model model){
-        if (!userService.createUser(user)) {
+        if (!userServiceImpl.createUser(user)) {
             model.addAttribute("errorMessage", "Пользователь с " + user.getEmail() + "уже существует!");
             return "registration";
         }

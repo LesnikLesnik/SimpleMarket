@@ -3,7 +3,7 @@ package com.example.buysell.controllers;
 
 import com.example.buysell.entity.User;
 import com.example.buysell.entity.enums.Role;
-import com.example.buysell.services.UserService;
+import com.example.buysell.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,17 +19,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @GetMapping("/admin")
     public String admin(Model model){
-        model.addAttribute("users", userService.list()); //передаем сюда всех юзеров
+        model.addAttribute("users", userServiceImpl.list()); //передаем сюда всех юзеров
         return "admin";
     }
 
     @PostMapping("/admin/user/ban/{id}")
     public String userBan(@PathVariable("id") Long id) {
-        userService.banUser(id);
+        userServiceImpl.banUser(id);
         return "redirect:/admin";
     }
 
@@ -42,7 +42,7 @@ public class AdminController {
 
     @PostMapping("/admin/user/edit")
     public String userEdit(@RequestParam("userId") User user, @RequestParam Map<String, String> form){
-        userService.changeUserRoles(user, form);
+        userServiceImpl.changeUserRoles(user, form);
         return "redirect:/admin";
     }
 }

@@ -1,4 +1,4 @@
-package com.example.buysell.controllers.dto;
+package com.example.buysell.dto;
 
 import com.example.buysell.entity.Image;
 import com.example.buysell.entity.Product;

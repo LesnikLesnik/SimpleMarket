@@ -1,7 +1,7 @@
 package com.example.buysell.controllers;
 
 import com.example.buysell.entity.Product;
-import com.example.buysell.services.ProductService;
+import com.example.buysell.services.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
-    private final ProductService PRODUCT_SERVICE;
+    private final ProductServiceImpl PRODUCT_SERVICE;
 
 
     @GetMapping("/")

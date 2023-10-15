@@ -1,4 +1,4 @@
-package com.example.buysell.controllers.dto;
+package com.example.buysell.dto;
 
 import com.example.buysell.entity.Image;
 import com.example.buysell.entity.Product;
@@ -28,6 +28,14 @@ public class ProductDTO {
 
     private Long previewImageId;
 
-
-
+    @Builder
+    public ProductDTO(@NonNull Long id, String title, String description, int price, String city, List<Image> images, Long previewImageId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.city = city;
+        this.images = images;
+        this.previewImageId = previewImageId;
+    }
 }
