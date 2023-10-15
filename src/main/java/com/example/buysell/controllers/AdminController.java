@@ -1,8 +1,8 @@
 package com.example.buysell.controllers;
 
 
-import com.example.buysell.models.User;
-import com.example.buysell.models.enums.Role;
+import com.example.buysell.entity.User;
+import com.example.buysell.entity.enums.Role;
 import com.example.buysell.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

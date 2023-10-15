@@ -1,4 +1,4 @@
-package com.example.buysell.models;
+package com.example.buysell.entity;
 
 
 import lombok.AllArgsConstructor;

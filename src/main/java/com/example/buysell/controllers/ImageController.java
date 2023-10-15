@@ -5,10 +5,9 @@ package com.example.buysell.controllers;
  */
 
 
-import com.example.buysell.models.Image;
+import com.example.buysell.entity.Image;
 import com.example.buysell.repos.ImageRepo;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

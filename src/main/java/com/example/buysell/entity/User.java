@@ -1,8 +1,8 @@
-package com.example.buysell.models;
+package com.example.buysell.entity;
 
 //отображение пользователя который будет регистрироваться в системе
 
-import com.example.buysell.models.enums.Role;
+import com.example.buysell.entity.enums.Role;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

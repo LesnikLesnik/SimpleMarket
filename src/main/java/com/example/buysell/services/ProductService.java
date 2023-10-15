@@ -1,8 +1,9 @@
 package com.example.buysell.services;
 
-import com.example.buysell.models.Image;
-import com.example.buysell.models.Product;
-import com.example.buysell.models.User;
+import com.example.buysell.entity.Image;
+import com.example.buysell.entity.Product;
+import com.example.buysell.entity.User;
+import com.example.buysell.exceptions.ProductNotFoundException;
 import com.example.buysell.repos.ProductRepo;
 import com.example.buysell.repos.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,6 +72,7 @@ public class ProductService {
     } //удаление товара из листа товаров
 
     public Object getProductById(Long id) {
-        return productRepo.findById(id).orElse(null);
+        return productRepo.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
     } //получение товара по id
 }

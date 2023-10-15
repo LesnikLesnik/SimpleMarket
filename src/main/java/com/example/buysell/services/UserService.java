@@ -1,8 +1,8 @@
 package com.example.buysell.services;
 
 
-import com.example.buysell.models.User;
-import com.example.buysell.models.enums.Role;
+import com.example.buysell.entity.User;
+import com.example.buysell.entity.enums.Role;
 import com.example.buysell.repos.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

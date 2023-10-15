@@ -1,4 +1,4 @@
-package com.example.buysell.models;
+package com.example.buysell.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,9 +51,5 @@ public class Product {
         image.setProduct(this); //устанавливаем фото на текущий товар
         images.add(image);
     }
-    /*
-    cascade.All значит и то, что при сохранении товара включающий в свой список фото, сохранятся будет не только товар, но и все
-    связанные с ним сущности (фото). Также при удалении. Нам не нужно обращаться к репозиторию чтобы отдельно сохранить фото,
-    этим занимаются хибернейт
-     */
+
 }
