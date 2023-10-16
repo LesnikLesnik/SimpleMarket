@@ -31,6 +31,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper mapper;
     private final UserRepo userRepo;
 
+    private final ImageServiceImpl imageService;
+
     public List<ProductDTO> listProducts(String title) {
         List<Product> products;
         if (title != null) {
@@ -53,20 +55,14 @@ public class ProductServiceImpl implements ProductService {
         // Устанавливаем пользователя на основе Principal
         product.setUser(getUserByPrincipal(principal));
 
-        Image image1 = toImageEntity(file1);
-        Image image2 = toImageEntity(file2);
-        Image image3 = toImageEntity(file3);
-        if (file1.getSize() != 0) { //если фото имеется, преобразовываем из мультипарт в фото
-            image1.setPreviewImage(true);
-            product.addImageToProduct(image1);
-        }
-        if (file2.getSize() != 0) {
-            product.addImageToProduct(image2);
-        }
-        if (file3.getSize() != 0) {
-            product.addImageToProduct(image3);
+        //переводим полученные файлы в изображения
+        Image image1 = imageService.toImageEntity(file1);
+        Image image2 = imageService.toImageEntity(file2);
+        Image image3 = imageService.toImageEntity(file3);
 
-        }
+        //добавляем изображения к товару
+        imageService.addImageToProduct(product, image1, file1, image2, file2, image3, file3);
+
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
         Product productFromDb = productRepo.save(product);
         productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId()); //получаем первую (превьюшную) фотографию
@@ -78,22 +74,11 @@ public class ProductServiceImpl implements ProductService {
         return userRepo.findByEmail(principal.getName());
     }
 
-    public Image toImageEntity(MultipartFile file) throws IOException {
-        Image image = new Image();
-        image.setName(file.getName());
-        image.setOriginalFileName(file.getOriginalFilename());
-        image.setContentType(file.getContentType());
-        image.setSize(file.getSize());
-        image.setBytes(file.getBytes());
-        return image;
-    }
-
     public void deleteProduct(Long id) {
         productRepo.deleteById(id);
     } //удаление товара из листа товаров
 
     public Object getProductById(Long id) {
-        return productRepo.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
+        return productRepo.findById(id).orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
     } //получение товара по id
 }
