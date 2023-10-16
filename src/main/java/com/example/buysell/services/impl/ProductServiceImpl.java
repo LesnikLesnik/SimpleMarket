@@ -41,8 +41,18 @@ public class ProductServiceImpl implements ProductService {
         return mapper.map(products);
     } //получение всего листа товаров
 
-    public void saveProduct(Principal principal, Product product, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
+    public void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
+        // Создаем новый объект Product на основе данных из ProductDTO
+        Product product = new Product();
+        product.setTitle(productDTO.getTitle());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setCity(productDTO.getCity());
+
+
+        // Устанавливаем пользователя на основе Principal
         product.setUser(getUserByPrincipal(principal));
+
         Image image1 = toImageEntity(file1);
         Image image2 = toImageEntity(file2);
         Image image3 = toImageEntity(file3);
@@ -55,6 +65,7 @@ public class ProductServiceImpl implements ProductService {
         }
         if (file3.getSize() != 0) {
             product.addImageToProduct(image3);
+
         }
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
         Product productFromDb = productRepo.save(product);

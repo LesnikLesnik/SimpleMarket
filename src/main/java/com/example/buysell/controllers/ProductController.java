@@ -1,5 +1,6 @@
 package com.example.buysell.controllers;
 
+import com.example.buysell.dto.ProductDTO;
 import com.example.buysell.entity.Product;
 import com.example.buysell.services.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,8 @@ public class ProductController {
     public String createProduct(@RequestParam("file1") MultipartFile file1,
                                 @RequestParam("file2") MultipartFile file2,
                                 @RequestParam("file3") MultipartFile file3,
-                                Product product, Principal principal) throws IOException {
-        PRODUCT_SERVICE.saveProduct(principal, product, file1, file2, file3);
+                                ProductDTO productDTO, Principal principal) throws IOException {
+        PRODUCT_SERVICE.saveProduct(principal, productDTO, file1, file2, file3);
         return "redirect:/";
     }
 
