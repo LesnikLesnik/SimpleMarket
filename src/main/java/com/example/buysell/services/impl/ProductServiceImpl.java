@@ -1,13 +1,17 @@
 package com.example.buysell.services.impl;
 
+import com.example.buysell.dto.ProductDTO;
 import com.example.buysell.entity.Image;
 import com.example.buysell.entity.Product;
 import com.example.buysell.entity.User;
 import com.example.buysell.exceptions.ProductNotFoundException;
+import com.example.buysell.mapper.ProductMapper;
 import com.example.buysell.repos.ProductRepo;
 import com.example.buysell.repos.UserRepo;
+import com.example.buysell.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,17 +22,23 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ProductServiceImpl {
+public class ProductServiceImpl implements ProductService {
 
 
     private final ProductRepo productRepo;
 
+    @Autowired
+    private final ProductMapper mapper;
     private final UserRepo userRepo;
 
-    public List<Product> listProducts(String title) {
-        List<Product> products = productRepo.findAll();
-        if (title != null) return productRepo.findByTitle(title);
-        return products;
+    public List<ProductDTO> listProducts(String title) {
+        List<Product> products;
+        if (title != null) {
+            products = productRepo.findByTitle(title);
+        } else {
+            products = productRepo.findAll();
+        }
+        return mapper.map(products);
     } //получение всего листа товаров
 
     public void saveProduct(Principal principal, Product product, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
