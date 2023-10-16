@@ -48,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setCity(productDTO.getCity());
-
+        product.setDateOfCreated(productDTO.getDateOfCreated());
 
         // Устанавливаем пользователя на основе Principal
         product.setUser(getUserByPrincipal(principal));

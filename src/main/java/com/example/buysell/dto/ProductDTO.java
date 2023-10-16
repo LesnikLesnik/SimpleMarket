@@ -1,10 +1,9 @@
 package com.example.buysell.dto;
 
 import com.example.buysell.entity.Image;
-import com.example.buysell.entity.Product;
 import lombok.*;
 
-import javax.persistence.Column;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -28,8 +27,10 @@ public class ProductDTO {
 
     private Long previewImageId;
 
+    private LocalDateTime dateOfCreated;
+
     @Builder
-    public ProductDTO(@NonNull Long id, String title, String description, int price, String city, List<Image> images, Long previewImageId) {
+    public ProductDTO(@NonNull Long id, String title, String description, int price, String city, List<Image> images, Long previewImageId, LocalDateTime dateOfCreated) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -37,5 +38,6 @@ public class ProductDTO {
         this.city = city;
         this.images = images;
         this.previewImageId = previewImageId;
+        this.dateOfCreated = dateOfCreated;
     }
 }
