@@ -21,20 +21,16 @@ import java.util.List;
 
 
 /**
- * Сервис для работы с продуктами
+ * Сервис для работы с товарами
  */
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-
-
     private final ProductRepo productRepo;
-
     @Autowired
     private final ProductMapper mapper;
     private final UserRepo userRepo;
-
     private final ImageServiceImpl imageService;
 
     @Override
@@ -48,6 +44,11 @@ public class ProductServiceImpl implements ProductService {
         return mapper.map(products);
     } //получение всего листа товаров
 
+    /**
+     * Создаем (и сохраняем в БД) новый товар
+     * @param principal активность пользователя
+     * @param file1 форма для добавления 3 файлов, которые будут преобразованы в изображения
+     */
     @Override
     public void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
         // Создаем новый объект Product на основе данных из ProductDTO
@@ -67,13 +68,15 @@ public class ProductServiceImpl implements ProductService {
         Image image3 = imageService.toImageEntity(file3);
 
         //добавляем изображения к товару
-        imageService.addImageToProduct(product, image1, file1, image2, file2, image3, file3);
+        imageService.addImageToProduct(product,
+                image1, image2, image3,
+                file1, file2, file3);
 
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
         Product productFromDb = productRepo.save(product);
         productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId()); //получаем первую (превьюшную) фотографию
         productRepo.save(product); //сохраняем уже с фото
-    } //сохранение товара в листе товаров
+    }
 
     public User getUserByPrincipal(Principal principal) {
         if (principal == null) return new User();

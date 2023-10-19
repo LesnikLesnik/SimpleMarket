@@ -18,19 +18,19 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
-    private final ProductServiceImpl PRODUCT_SERVICE;
+    private final ProductServiceImpl productService;
 
 
     @GetMapping("/")
     public String products(@RequestParam(name = "title", required = false) String title, Principal principal, Model model) {
-        model.addAttribute("products", PRODUCT_SERVICE.listProducts(title)); //передаем список всех товаров если title не задан
-        model.addAttribute("user", PRODUCT_SERVICE.getUserByPrincipal(principal));
+        model.addAttribute("products", productService.listProducts(title)); //передаем список всех товаров если title не задан
+        model.addAttribute("user", productService.getUserByPrincipal(principal));
         return "products";
     }
 
     @GetMapping("/product/{id}")
     public String productInfo(@PathVariable Long id, Model model) {
-        Product product = (Product) PRODUCT_SERVICE.getProductById(id);
+        Product product = (Product) productService.getProductById(id);
         model.addAttribute("product", product);
         model.addAttribute("images", product.getImages());
         return "product-info";
@@ -40,13 +40,13 @@ public class ProductController {
                                 @RequestParam("file2") MultipartFile file2,
                                 @RequestParam("file3") MultipartFile file3,
                                 ProductDTO productDTO, Principal principal) throws IOException {
-        PRODUCT_SERVICE.saveProduct(principal, productDTO, file1, file2, file3);
+        productService.saveProduct(principal, productDTO, file1, file2, file3);
         return "redirect:/";
     }
 
     @PostMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
-        PRODUCT_SERVICE.deleteProduct(id);
+        productService.deleteProduct(id);
         return "redirect:/";
     }
 }
