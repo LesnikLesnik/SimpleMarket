@@ -1,8 +1,4 @@
 package com.example.buysell.controllers;
-/*
-Контроллер получает фотографию из БД, преобразует байты в саму фотографию,
-и раздает ее
- */
 
 
 import com.example.buysell.entity.Image;
@@ -16,6 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
+/**
+ Контроллер получает фотографию из БД, преобразует байты в саму фотографию,
+ и раздает ее
+ */
+
 
 @RestController //представление возвращать не будем, поэтому rest
 @RequiredArgsConstructor
