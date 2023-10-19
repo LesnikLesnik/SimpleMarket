@@ -11,8 +11,6 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class ProductDTO {
-
-
     private Long id;
 
     private String title;

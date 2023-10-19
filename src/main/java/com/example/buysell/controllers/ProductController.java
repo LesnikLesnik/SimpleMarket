@@ -23,7 +23,7 @@ public class ProductController {
 
     @GetMapping("/")
     public String products(@RequestParam(name = "title", required = false) String title, Principal principal, Model model) {
-        model.addAttribute("products", PRODUCT_SERVICE.listProducts(title)); //передаем список всех товаров если title не задан, или вернет отсортированный
+        model.addAttribute("products", PRODUCT_SERVICE.listProducts(title)); //передаем список всех товаров если title не задан
         model.addAttribute("user", PRODUCT_SERVICE.getUserByPrincipal(principal));
         return "products";
     }

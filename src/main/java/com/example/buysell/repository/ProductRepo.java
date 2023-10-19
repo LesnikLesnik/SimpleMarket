@@ -7,7 +7,11 @@ import java.util.List;
 
 public interface ProductRepo extends JpaRepository<Product, Long> {
 
-    List<Product> findByTitle(String title); //
+    /**
+     * поиск товара по названию
+     * @param title название товара
+     */
+    List<Product> findByTitle(String title);
 
 
 }

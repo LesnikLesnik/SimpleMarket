@@ -3,16 +3,10 @@ package com.example.buysell.dto;
 import com.example.buysell.entity.Image;
 import com.example.buysell.entity.Product;
 import lombok.Data;
-
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-
 public class UserDTO {
-
-
     private Long id;
 
     private String email;

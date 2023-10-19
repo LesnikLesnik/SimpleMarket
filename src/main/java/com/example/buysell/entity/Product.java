@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity //данный класс не просто класс, а является тем что эмулирует таблицу из базы даных
+@Entity
 @Table(name = "products")
 @Data
 @AllArgsConstructor

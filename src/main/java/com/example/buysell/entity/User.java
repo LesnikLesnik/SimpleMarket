@@ -1,6 +1,6 @@
 package com.example.buysell.entity;
 
-//отображение пользователя который будет регистрироваться в системе
+
 
 import com.example.buysell.entity.enums.Role;
 import lombok.Data;
@@ -11,6 +11,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * отображение пользователя который будет регистрироваться в системе
+ */
 @Entity
 @Table(name = "users")
 @Data

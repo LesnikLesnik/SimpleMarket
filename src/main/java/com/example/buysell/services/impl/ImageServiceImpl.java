@@ -11,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * Сервис для работы с изображениями
+ */
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
@@ -25,6 +28,7 @@ public class ImageServiceImpl implements ImageService {
         return image;
     }
 
+    @Override
     public Product addImageToProduct(Product product, Image image1, MultipartFile file1,
                                      Image image2, MultipartFile file2,
                                      Image image3, MultipartFile file3){
@@ -40,5 +44,10 @@ public class ImageServiceImpl implements ImageService {
         }
         return product;
     }
+
+    /**
+     * будет добавлен функционал для сохранения изображения не в БД.
+     * В БД будет передаваться только путь к файлу на диске
+     */
 
 }

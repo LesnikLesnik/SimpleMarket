@@ -7,14 +7,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-//определяем как сервер подгружает юзеров по юзернейму
+
+/**
+ * Логика работы сервера с подгрузкой пользователей по username (в данном случае username = email)
+ */
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepo userRepo;
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { //определяем как подгружаем юзеров
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepo.findByEmail(email);
     }
 }

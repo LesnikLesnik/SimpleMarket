@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
+
+/**
+ * Сервис для работы с продуктами
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -33,6 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ImageServiceImpl imageService;
 
+    @Override
     public List<ProductDTO> listProducts(String title) {
         List<Product> products;
         if (title != null) {
@@ -43,6 +48,7 @@ public class ProductServiceImpl implements ProductService {
         return mapper.map(products);
     } //получение всего листа товаров
 
+    @Override
     public void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
         // Создаем новый объект Product на основе данных из ProductDTO
         Product product = new Product();
@@ -74,10 +80,12 @@ public class ProductServiceImpl implements ProductService {
         return userRepo.findByEmail(principal.getName());
     }
 
+    @Override
     public void deleteProduct(Long id) {
         productRepo.deleteById(id);
     } //удаление товара из листа товаров
 
+    @Override
     public Object getProductById(Long id) {
         return productRepo.findById(id).orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
     } //получение товара по id
