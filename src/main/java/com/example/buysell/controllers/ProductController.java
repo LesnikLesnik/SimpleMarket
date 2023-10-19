@@ -1,7 +1,8 @@
 package com.example.buysell.controllers;
 
-import com.example.buysell.models.Product;
-import com.example.buysell.services.ProductService;
+import com.example.buysell.dto.ProductDTO;
+import com.example.buysell.entity.Product;
+import com.example.buysell.services.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,7 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
-    private final ProductService PRODUCT_SERVICE;
+    private final ProductServiceImpl PRODUCT_SERVICE;
 
 
     @GetMapping("/")
@@ -39,8 +40,8 @@ public class ProductController {
     public String createProduct(@RequestParam("file1") MultipartFile file1,
                                 @RequestParam("file2") MultipartFile file2,
                                 @RequestParam("file3") MultipartFile file3,
-                                Product product, Principal principal) throws IOException {
-        PRODUCT_SERVICE.saveProduct(principal, product, file1, file2, file3);
+                                ProductDTO productDTO, Principal principal) throws IOException {
+        PRODUCT_SERVICE.saveProduct(principal, productDTO, file1, file2, file3);
         return "redirect:/";
     }
 

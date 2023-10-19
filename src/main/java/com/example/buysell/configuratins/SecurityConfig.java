@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService) //устанавливаем сервис указателем как нужно подгружать юузеров
+        auth.userDetailsService(userDetailsService) //устанавливаем сервис указателем как нужно подгружать юзеров
                 .passwordEncoder(passwordEncoder()); //указываем как будет происходить расшифровка паролей
     }
 

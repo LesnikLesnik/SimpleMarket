@@ -1,4 +1,4 @@
-package com.example.buysell.models;
+package com.example.buysell.entity;
 
 
 import lombok.AllArgsConstructor;
@@ -30,11 +30,7 @@ public class Image {
     @Lob //означает что данное поле в БД будет храниться в типе LONGBLOG
     @Column(name = "bytes", columnDefinition = "longblob")
     private byte[] bytes;
-/*
-Hibernate преобразует в For in key по которому мы сможем получить товар из фотографий
-будет таблица images и products в таблице images будет модель фотографий
-если эта фотография прикреплена к полю с id-3, то будет присвоена товару с таким же id
- */
+
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER) //как повлияет действие с сущностью товара на сущность с фотографией
     private Product product;
