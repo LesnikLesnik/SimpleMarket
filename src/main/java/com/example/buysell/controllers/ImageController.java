@@ -6,7 +6,7 @@ package com.example.buysell.controllers;
 
 
 import com.example.buysell.entity.Image;
-import com.example.buysell.repos.ImageRepo;
+import com.example.buysell.repository.ImageRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;

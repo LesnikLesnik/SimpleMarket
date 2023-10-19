@@ -3,7 +3,7 @@ package com.example.buysell.services.impl;
 
 import com.example.buysell.entity.User;
 import com.example.buysell.entity.enums.Role;
-import com.example.buysell.repos.UserRepo;
+import com.example.buysell.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

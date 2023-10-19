@@ -1,6 +1,6 @@
 package com.example.buysell.services;
 
-import com.example.buysell.repos.UserRepo;
+import com.example.buysell.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
