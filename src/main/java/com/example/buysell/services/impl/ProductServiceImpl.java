@@ -6,8 +6,8 @@ import com.example.buysell.entity.Product;
 import com.example.buysell.entity.User;
 import com.example.buysell.exceptions.ProductNotFoundException;
 import com.example.buysell.mapper.ProductMapper;
-import com.example.buysell.repository.ProductRepo;
-import com.example.buysell.repository.UserRepo;
+import com.example.buysell.repository.ProductRepository;
+import com.example.buysell.repository.UserRepository;
 import com.example.buysell.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -27,22 +29,30 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    private final ProductRepo productRepo;
+    private final ProductRepository productRepository;
     @Autowired
     private final ProductMapper mapper;
-    private final UserRepo userRepo;
+    private final UserRepository userRepository;
     private final ImageServiceImpl imageService;
 
+    /**
+     * возвращает отсортированный список товаров по названию (если оно задано)
+     * @param title название товара
+     * @return если не задан title, возвращает список всех товаров
+     */
     @Override
-    public List<ProductDTO> listProducts(String title) {
-        List<Product> products;
-        if (title != null) {
-            products = productRepo.findByTitle(title);
-        } else {
-            products = productRepo.findAll();
-        }
-        return mapper.map(products);
-    } //получение всего листа товаров
+    public List<ProductDTO> getListProducts(String title) {
+        List<Product> products = getProducts(title);
+        return products.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
+    }
+
+    private List<Product> getProducts(String title) {
+        return Optional.ofNullable(title)
+                .map(productRepository::findByTitleLikeIgnoreCase)
+                .orElseGet(productRepository::findAll);
+    }
 
     /**
      * Создаем (и сохраняем в БД) новый товар
@@ -73,23 +83,25 @@ public class ProductServiceImpl implements ProductService {
                 file1, file2, file3);
 
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
-        Product productFromDb = productRepo.save(product);
+        Product productFromDb = productRepository.save(product);
         productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId()); //получаем первую (превьюшную) фотографию
-        productRepo.save(product); //сохраняем уже с фото
+        productRepository.save(product); //сохраняем уже с фото
     }
 
     public User getUserByPrincipal(Principal principal) {
-        if (principal == null) return new User();
-        return userRepo.findByEmail(principal.getName());
+        return Optional.ofNullable(principal)
+                .map(Principal::getName)
+                .map(userRepository::findByEmail)
+                .orElseGet(User::new);
     }
 
     @Override
     public void deleteProduct(Long id) {
-        productRepo.deleteById(id);
+        productRepository.deleteById(id);
     } //удаление товара из листа товаров
 
     @Override
     public Object getProductById(Long id) {
-        return productRepo.findById(id).orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
     } //получение товара по id
 }

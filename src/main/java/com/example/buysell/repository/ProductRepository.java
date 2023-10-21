@@ -5,13 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProductRepo extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
     /**
      * поиск товара по названию
      * @param title название товара
      */
-    List<Product> findByTitle(String title);
+    List<Product> findByTitleLikeIgnoreCase(String title);
 
 
 }

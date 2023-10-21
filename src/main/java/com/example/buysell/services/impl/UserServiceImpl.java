@@ -3,7 +3,7 @@ package com.example.buysell.services.impl;
 
 import com.example.buysell.entity.User;
 import com.example.buysell.entity.enums.Role;
-import com.example.buysell.repository.UserRepo;
+import com.example.buysell.repository.UserRepository;
 import com.example.buysell.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepo userRepo;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; //для шифрования паролей
 
     /**
@@ -32,12 +32,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean createUser(User user) {
         String email = user.getEmail();
-        if (userRepo.findByEmail(email) != null) return false;
+        if (userRepository.findByEmail(email) != null) return false;
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword())); //шифруем пароль
         user.getRoles().add(Role.USER);
         log.info("Saving new User with email: {}", email);
-        userRepo.save(user);
+        userRepository.save(user);
         return true;
     }
 
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> list() {
-        return userRepo.findAll();
+        return userRepository.findAll();
     }
 
     /**
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void banUser(Long id) {
-        User user = userRepo.findById(id).orElse(null); //находим пользователя по айди
+        User user = userRepository.findById(id).orElse(null); //находим пользователя по айди
         if (user != null) {
             if (user.isActive()) { //если юзер активен
                 user.setActive(false); //устанавливаем активность пользователя на false, что деактивирует его возможность делать что-либо
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
                 log.info("Unban user with id = {}; email: {}", user.getId(), user.getEmail());
             }
         }
-        userRepo.save(user);
+        userRepository.save(user);
     }
 
     /**
@@ -84,6 +84,6 @@ public class UserServiceImpl implements UserService {
                 user.getRoles().add(Role.valueOf(key)); //тогда добавляем ее пользователю
             }
         }
-        userRepo.save(user); //сохраняем в репозитории обновленные данные
+        userRepository.save(user); //сохраняем в репозитории обновленные данные
     }
 }

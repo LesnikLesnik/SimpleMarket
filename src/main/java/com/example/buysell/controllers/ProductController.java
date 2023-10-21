@@ -2,6 +2,7 @@ package com.example.buysell.controllers;
 
 import com.example.buysell.dto.ProductDTO;
 import com.example.buysell.entity.Product;
+import com.example.buysell.entity.User;
 import com.example.buysell.services.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,8 +25,11 @@ public class ProductController {
 
     @GetMapping("/")
     public String products(@RequestParam(name = "title", required = false) String title, Principal principal, Model model) {
-        model.addAttribute("products", productService.listProducts(title)); //передаем список всех товаров если title не задан
-        model.addAttribute("user", productService.getUserByPrincipal(principal));
+        List<ProductDTO> productDTOList = productService.getListProducts(title);
+        User userByPrincipal = productService.getUserByPrincipal(principal);
+
+        model.addAttribute("products", productDTOList);
+        model.addAttribute("user", userByPrincipal);
         return "products";
     }
 
