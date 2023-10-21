@@ -10,7 +10,7 @@ public interface ImageService {
 
     Image toImageEntity(MultipartFile file) throws IOException;
 
-    Product addImageToProduct(Product product, Image image1, MultipartFile file1,
-                              Image image2, MultipartFile file2,
-                              Image image3, MultipartFile file3);
+    Product addImageToProduct(Product product,
+                              Image image1, Image image2, Image image3,
+                              MultipartFile file1, MultipartFile file2, MultipartFile file3);
 }

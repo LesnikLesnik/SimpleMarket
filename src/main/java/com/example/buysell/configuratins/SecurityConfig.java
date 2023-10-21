@@ -26,11 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest().authenticated() //здесь уже требуется аутентификация
                 .and()
-                .formLogin()//конфигурируем форму логина
+                .formLogin()//конфигурируем форму входа
                 .loginPage("/login")
                 .permitAll()
                 .and()
-                .logout()//форма логаута
+                .logout()
                 .permitAll();
          }
 
