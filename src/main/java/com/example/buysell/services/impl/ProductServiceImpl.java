@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     @Autowired
-    private final ProductMapper mapper;
+    private final ProductMapper productMapper;
     private final UserRepository userRepository;
     private final ImageServiceImpl imageService;
 
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDTO> getListProducts(String title) {
         List<Product> products = getProducts(title);
         return products.stream()
-                .map(mapper::map)
+                .map(productMapper::map)
                 .collect(Collectors.toList());
     }
 
