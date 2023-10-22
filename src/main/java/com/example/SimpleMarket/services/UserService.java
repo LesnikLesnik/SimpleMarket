@@ -13,4 +13,5 @@ public interface UserService {
     void banUser(Long id);
     void changeUserRoles(User user, Map<String, String> form);
     User getUserByPrincipal(Principal principal);
+    User getUserById(Long id);
 }

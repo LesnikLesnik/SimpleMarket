@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.*;
@@ -73,16 +74,18 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void changeUserRoles(User user, Map<String, String> form) {
-        Set<String> roles = Arrays.stream(Role.values()) //проходимся по всем ролям
-                .map(Role::name) //для каждой роли из коллекции выше мы вызываем метод name (преобразуем в строку)
-                .collect(Collectors.toSet()); //преобразование всех ролей в сэт из строк
-        user.getRoles().clear();
-        for (String key : form.keySet()){
-            if (roles.contains(key)){ //если роль содержит ту "роль", которую мы передаем в Мэп
-                user.getRoles().add(Role.valueOf(key)); //тогда добавляем ее пользователю
-            }
-        }
-        userRepository.save(user); //сохраняем в репозитории обновленные данные
+        Set<Role> roles = Arrays.stream(Role.values())
+                .filter(role -> form.containsKey(role.name()))
+                .collect(Collectors.toSet());
+
+        user.setRoles(roles);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     public User getUserByPrincipal(Principal principal) {

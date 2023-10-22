@@ -4,6 +4,8 @@ package com.example.SimpleMarket.entity;
 
 import com.example.SimpleMarket.entity.enums.Role;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,8 +17,9 @@ import java.util.*;
  * отображение пользователя который будет регистрироваться в системе
  */
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
-@Data
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
