@@ -1,8 +1,11 @@
 package com.example.SimpleMarket.controllers;
 
 import com.example.SimpleMarket.dto.ProductDTO;
+import com.example.SimpleMarket.entity.Image;
 import com.example.SimpleMarket.entity.Product;
 import com.example.SimpleMarket.entity.User;
+import com.example.SimpleMarket.services.ProductService;
+import com.example.SimpleMarket.services.UserService;
 import com.example.SimpleMarket.services.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,13 +23,14 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
-    private final ProductServiceImpl productService;
+    private final ProductService productService;
+    private final UserService userService;
 
 
     @GetMapping("/")
     public String products(@RequestParam(name = "title", required = false) String title, Principal principal, Model model) {
         List<ProductDTO> productDTOList = productService.getListProducts(title);
-        User userByPrincipal = productService.getUserByPrincipal(principal);
+        User userByPrincipal = userService.getUserByPrincipal(principal);
 
         model.addAttribute("products", productDTOList);
         model.addAttribute("user", userByPrincipal);
@@ -37,10 +41,14 @@ public class ProductController {
     @GetMapping("/product/{id}")
     public String productInfo(@PathVariable Long id, Model model, Principal principal) {
         Product product = (Product) productService.getProductById(id);
-        model.addAttribute("user", productService.getUserByPrincipal(principal));
+        User userByPrincipal = userService.getUserByPrincipal(principal);
+        List<Image> productImages = product.getImages();
+        User author = product.getUser();
+
+        model.addAttribute("user", userByPrincipal);
         model.addAttribute("product", product);
-        model.addAttribute("images", product.getImages());
-        model.addAttribute("authorProduct", product.getUser());
+        model.addAttribute("images", productImages);
+        model.addAttribute("authorProduct", author);
         return "product-info";
     }
     @PostMapping("/product/create")
@@ -54,15 +62,17 @@ public class ProductController {
 
     @PostMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable Long id, Principal principal) {
-        productService.deleteProduct(productService.getUserByPrincipal(principal), id);
+        productService.deleteProduct(userService.getUserByPrincipal(principal), id);
         return "redirect:/my/products";
     }
 
     @GetMapping("/my/products")
     public String userProducts(Principal principal, Model model) {
-        User user = productService.getUserByPrincipal(principal);
+        User user = userService.getUserByPrincipal(principal);
+        List<Product> products = user.getProducts();
+
         model.addAttribute("user", user);
-        model.addAttribute("products", user.getProducts());
+        model.addAttribute("products", products);
         return "my-products";
     }
 }
