@@ -34,12 +34,9 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @PostMapping
-    public void createProduct(@RequestParam("file1") MultipartFile file1,
-                              @RequestParam("file2") MultipartFile file2,
-                              @RequestParam("file3") MultipartFile file3,
-                              ProductDTO productDTO, Principal principal) throws IOException {
-        productService.saveProduct(principal, productDTO, file1, file2, file3);
+    @PostMapping("/create")
+    public void createProduct(@RequestBody ProductDTO productDTO, Principal principal) throws IOException {
+        productService.saveProduct(principal, productDTO);
     }
 
     @DeleteMapping("/{id}")

@@ -14,4 +14,12 @@ public interface UserService {
     void changeUserRoles(User user, Map<String, String> form);
     User getUserByPrincipal(Principal principal);
     User getUserById(Long id);
+
+    /**
+     * Аутентификация пользователя по email и паролю
+     * @param email    email пользователя
+     * @param password пароль пользователя
+     * @return true, если аутентификация успешна, иначе false
+     */
+    boolean authenticateUser(String email, String password);
 }

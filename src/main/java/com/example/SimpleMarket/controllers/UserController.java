@@ -5,6 +5,7 @@ import com.example.SimpleMarket.dto.ProductDTO;
 import com.example.SimpleMarket.entity.Product;
 import com.example.SimpleMarket.entity.User;
 import com.example.SimpleMarket.services.ProductService;
+import com.example.SimpleMarket.services.UserService;
 import com.example.SimpleMarket.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final ProductService productService;
 
     @GetMapping("/profile")
@@ -39,6 +40,14 @@ public class UserController {
             return ResponseEntity.badRequest().body("Пользователь с таким email уже существует.");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно создан.");
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user) {
+        if (userService.authenticateUser(user.getEmail(), user.getPassword())) {
+            return ResponseEntity.ok("Аутентификация успешна.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ошибка аутентификации.");
+        }
     }
 
     @GetMapping("/{id}/products")

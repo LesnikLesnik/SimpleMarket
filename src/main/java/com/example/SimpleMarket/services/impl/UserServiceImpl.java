@@ -88,6 +88,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public boolean authenticateUser(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return true;
+        }
+        return false;
+    }
+
+
     public User getUserByPrincipal(Principal principal) {
         return Optional.ofNullable(principal)
                 .map(Principal::getName)

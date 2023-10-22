@@ -15,5 +15,9 @@ public interface ProductService {
     ProductDTO getProductById(Long id);
     List<ProductDTO> getUserProductsAsDTO(Long userId);
 
-    void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException;
+    void saveProduct(Principal principal, ProductDTO productDTO) throws IOException;
+
+
+        //метод временно деактивирован
+//    void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException;
 }

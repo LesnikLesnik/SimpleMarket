@@ -42,18 +42,4 @@ public class AdminController {
         User user = userService.getUserById(id);
         userService.changeUserRoles(user, form);
     }
-
-//    @GetMapping("/admin/user/edit/{user}")
-//    public String userEdit(@PathVariable("user") User user, Model model, Principal principal) {
-//        model.addAttribute("user", user);
-//        model.addAttribute("user", userService.getUserByPrincipal(principal));
-//        model.addAttribute("roles", Role.values());
-//        return "user-edit";
-//    }
-//
-//    @PostMapping("/admin/user/edit")
-//    public String userEdit(@RequestParam("userId") User user, @RequestParam Map<String, String> form) {
-//        userService.changeUserRoles(user, form);
-//        return "redirect:/admin";
-//    }
 }

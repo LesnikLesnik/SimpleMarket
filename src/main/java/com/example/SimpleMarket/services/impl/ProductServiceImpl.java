@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
      * @return если не задан title, возвращает список всех товаров
      */
     @Override
+    @Transactional(readOnly = true)
     public List<ProductDTO> getListProducts(String title) {
         List<Product> products = getProducts(title);
         return products.stream()
@@ -58,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductDTO> getUserProductsAsDTO(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с id: " + userId + "не найден."));
@@ -67,42 +70,22 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-
-    /**
-     * Создаем (и сохраняем в БД) новый товар
-     * @param principal активность пользователя
-     * @param file1 форма для добавления 3 файлов, которые будут преобразованы в изображения
-     */
     @Override
-    public void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
-        // Создаем новый объект Product на основе данных из ProductDTO
+    @Transactional
+    public void saveProduct(Principal principal, ProductDTO productDTO) throws IOException {
         Product product = new Product();
         product.setTitle(productDTO.getTitle());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setCity(productDTO.getCity());
         product.setDateOfCreated(productDTO.getDateOfCreated());
-
-        // Устанавливаем пользователя на основе Principal
         product.setUser(userService.getUserByPrincipal(principal));
 
-        //переводим полученные файлы в изображения
-        Image image1 = imageService.toImageEntity(file1);
-        Image image2 = imageService.toImageEntity(file2);
-        Image image3 = imageService.toImageEntity(file3);
-
-        //добавляем изображения к товару
-        imageService.addImageToProduct(product,
-                image1, image2, image3,
-                file1, file2, file3);
-
+        productRepository.save(product);
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
-        Product productFromDb = productRepository.save(product);
-        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId()); //получаем первую (превьюшную) фотографию
-        productRepository.save(product); //сохраняем уже с фото
     }
-
     @Override
+    @Transactional
     public void deleteProduct(User user, Long id) {
         productRepository.findById(id)
                 .ifPresent(product -> {
@@ -117,9 +100,48 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
         return productMapper.map(product);
     } //получение товара по id
 }
+
+/**
+ * здесь находится метод сохранения товара с возможностью прикрепления трех изображений
+ * временно деактивирован и заменен методом без изображений
+ */
+//    /**
+//     * Создаем (и сохраняем в БД) новый товар
+//     * @param principal активность пользователя
+//     * @param file1 форма для добавления 3 файлов, которые будут преобразованы в изображения
+//     */
+//    @Override
+//    public void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
+//        // Создаем новый объект Product на основе данных из ProductDTO
+//        Product product = new Product();
+//        product.setTitle(productDTO.getTitle());
+//        product.setDescription(productDTO.getDescription());
+//        product.setPrice(productDTO.getPrice());
+//        product.setCity(productDTO.getCity());
+//        product.setDateOfCreated(productDTO.getDateOfCreated());
+//
+//        // Устанавливаем пользователя на основе Principal
+//        product.setUser(userService.getUserByPrincipal(principal));
+//
+//        //переводим полученные файлы в изображения
+//        Image image1 = imageService.toImageEntity(file1);
+//        Image image2 = imageService.toImageEntity(file2);
+//        Image image3 = imageService.toImageEntity(file3);
+//
+//        //добавляем изображения к товару
+//        imageService.addImageToProduct(product,
+//                image1, image2, image3,
+//                file1, file2, file3);
+//
+//        log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
+//        Product productFromDb = productRepository.save(product);
+//        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId()); //получаем первую (превьюшную) фотографию
+//        productRepository.save(product); //сохраняем уже с фото
+//    }
