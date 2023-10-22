@@ -95,10 +95,24 @@ public class ProductServiceImpl implements ProductService {
                 .orElseGet(User::new);
     }
 
-    @Override
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
-    } //удаление товара из листа товаров
+    public void deleteProduct(User user, Long id) {
+        productRepository.findById(id)
+                .ifPresent(product -> {
+                    if (product.getUser().getId().equals(user.getId())) {
+                        productRepository.delete(product);
+                        log.info("Product with id = {} was deleted", id);
+                    } else {
+                        log.error("User: {} haven't this product with id = {}", user.getEmail(), id);
+                    }
+                });
+        log.error("Product with id = {} is not found", id);
+    }
+
+
+//    public void deleteProduct(User user, Long id) {
+//        Optional.ofNullable(id)
+//
+//    }
 
     @Override
     public Object getProductById(Long id) {

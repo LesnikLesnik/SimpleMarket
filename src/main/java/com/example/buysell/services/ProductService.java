@@ -1,6 +1,7 @@
 package com.example.buysell.services;
 
 import com.example.buysell.dto.ProductDTO;
+import com.example.buysell.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductDTO> getListProducts(String title);
-    void deleteProduct(Long id);
+    void deleteProduct(User user, Long id);
 
     Object getProductById(Long id);
 

@@ -10,10 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.security.Principal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -85,5 +83,12 @@ public class UserServiceImpl implements UserService {
             }
         }
         userRepository.save(user); //сохраняем в репозитории обновленные данные
+    }
+
+    public User getUserByPrincipal(Principal principal) {
+        return Optional.ofNullable(principal)
+                .map(Principal::getName)
+                .map(userRepository::findByEmail)
+                .orElseGet(User::new);
     }
 }
