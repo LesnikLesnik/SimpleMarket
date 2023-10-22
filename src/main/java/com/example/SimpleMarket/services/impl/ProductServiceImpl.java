@@ -5,6 +5,7 @@ import com.example.SimpleMarket.entity.Image;
 import com.example.SimpleMarket.entity.Product;
 import com.example.SimpleMarket.entity.User;
 import com.example.SimpleMarket.exceptions.ProductNotFoundException;
+import com.example.SimpleMarket.exceptions.UserNotFoundException;
 import com.example.SimpleMarket.mapper.ProductMapper;
 import com.example.SimpleMarket.repository.ProductRepository;
 import com.example.SimpleMarket.repository.UserRepository;
@@ -34,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private final ProductMapper productMapper;
     private final UserService userService;
+    private final UserRepository userRepository;
     private final ImageServiceImpl imageService;
 
     /**
@@ -54,6 +56,17 @@ public class ProductServiceImpl implements ProductService {
                 .map(productRepository::findByTitleLikeIgnoreCase)
                 .orElseGet(productRepository::findAll);
     }
+
+    @Override
+    public List<ProductDTO> getUserProductsAsDTO(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с id: " + userId + "не найден."));
+        List<Product> products = user.getProducts();
+        return products.stream()
+                .map(productMapper::map)
+                .collect(Collectors.toList());
+    }
+
 
     /**
      * Создаем (и сохраняем в БД) новый товар
@@ -89,6 +102,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product); //сохраняем уже с фото
     }
 
+    @Override
     public void deleteProduct(User user, Long id) {
         productRepository.findById(id)
                 .ifPresent(product -> {

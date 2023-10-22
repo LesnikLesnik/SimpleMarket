@@ -1,57 +1,49 @@
 package com.example.SimpleMarket.controllers;
 
 
+import com.example.SimpleMarket.dto.ProductDTO;
+import com.example.SimpleMarket.entity.Product;
 import com.example.SimpleMarket.entity.User;
+import com.example.SimpleMarket.services.ProductService;
 import com.example.SimpleMarket.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
-
-    @GetMapping("/login")
-    public String login(Principal principal, Model model) {
-        model.addAttribute("user", userService.getUserByPrincipal(principal));
-        return "login";
-    }
+    private final ProductService productService;
 
     @GetMapping("/profile")
-    public String profile(Principal principal,
-                          Model model) {
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
-        return "profile";
+    public User getProfile(Principal principal) {
+        return userService.getUserByPrincipal(principal);
     }
 
-    @GetMapping("/registration")
-    public String registration(Principal principal, Model model) {
-        model.addAttribute("user", userService.getUserByPrincipal(principal));
-        return "registration";
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
-
 
     @PostMapping("/registration")
-    public String createUser(User user, Model model) {
+    public ResponseEntity<String> createUser(@RequestBody User user) {
         if (!userService.createUser(user)) {
-            model.addAttribute("errorMessage", "Пользователь с email: " + user.getEmail() + " уже существует");
-            return "registration";
+            return ResponseEntity.badRequest().body("Пользователь с таким email уже существует.");
         }
-        return "redirect:/login";
+        return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно создан.");
     }
 
-    @GetMapping("/user/{user}")
-    public String userInfo(@PathVariable("user") User user, Model model, Principal principal) {
-        model.addAttribute("user", user);
-        model.addAttribute("userByPrincipal", userService.getUserByPrincipal(principal));
-        model.addAttribute("products", user.getProducts());
-        return "user-info";
+    @GetMapping("/{id}/products")
+    public List<ProductDTO> getUserProducts(@PathVariable Long id) {
+        return productService.getUserProductsAsDTO(id);
     }
 }
+

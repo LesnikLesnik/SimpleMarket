@@ -13,6 +13,7 @@ public interface ProductService {
     void deleteProduct(User user, Long id);
 
     ProductDTO getProductById(Long id);
+    List<ProductDTO> getUserProductsAsDTO(Long userId);
 
     void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException;
 }
