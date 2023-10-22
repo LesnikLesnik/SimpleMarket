@@ -9,6 +9,7 @@ import com.example.SimpleMarket.mapper.ProductMapper;
 import com.example.SimpleMarket.repository.ProductRepository;
 import com.example.SimpleMarket.repository.UserRepository;
 import com.example.SimpleMarket.services.ProductService;
+import com.example.SimpleMarket.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     @Autowired
     private final ProductMapper productMapper;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ImageServiceImpl imageService;
 
     /**
@@ -70,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDateOfCreated(productDTO.getDateOfCreated());
 
         // Устанавливаем пользователя на основе Principal
-        product.setUser(getUserByPrincipal(principal));
+        product.setUser(userService.getUserByPrincipal(principal));
 
         //переводим полученные файлы в изображения
         Image image1 = imageService.toImageEntity(file1);
@@ -88,13 +89,6 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product); //сохраняем уже с фото
     }
 
-    public User getUserByPrincipal(Principal principal) {
-        return Optional.ofNullable(principal)
-                .map(Principal::getName)
-                .map(userRepository::findByEmail)
-                .orElseGet(User::new);
-    }
-
     public void deleteProduct(User user, Long id) {
         productRepository.findById(id)
                 .ifPresent(product -> {
@@ -108,14 +102,10 @@ public class ProductServiceImpl implements ProductService {
         log.error("Product with id = {} is not found", id);
     }
 
-
-//    public void deleteProduct(User user, Long id) {
-//        Optional.ofNullable(id)
-//
-//    }
-
     @Override
-    public Object getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
+    public ProductDTO getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
+        return productMapper.map(product);
     } //получение товара по id
 }

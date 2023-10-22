@@ -68,8 +68,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Изменение роли пользователя (всего доступно две роли: Админ и Юзер)
-     * @param user
-     * @param form
+     * @param user пользователь, которому меняем роль
+     * @param form устанавливаемая роль
      */
     @Override
     public void changeUserRoles(User user, Map<String, String> form) {

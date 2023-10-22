@@ -12,7 +12,7 @@ public interface ProductService {
     List<ProductDTO> getListProducts(String title);
     void deleteProduct(User user, Long id);
 
-    Object getProductById(Long id);
+    ProductDTO getProductById(Long id);
 
     void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException;
 }
