@@ -9,6 +9,7 @@ import com.example.SimpleMarket.exceptions.UserNotFoundException;
 import com.example.SimpleMarket.mapper.ProductMapper;
 import com.example.SimpleMarket.repository.ProductRepository;
 import com.example.SimpleMarket.repository.UserRepository;
+import com.example.SimpleMarket.services.ImageService;
 import com.example.SimpleMarket.services.ProductService;
 import com.example.SimpleMarket.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
     private final UserService userService;
     private final UserRepository userRepository;
-    private final ImageServiceImpl imageService;
+    private ImageService imageService;
 
     /**
      * возвращает отсортированный список товаров по названию (если оно задано)
@@ -70,20 +71,41 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+    /**
+     * Создаем (и сохраняем в БД) новый товар
+     * @param principal активность пользователя
+     * @param file1 форма для добавления 3 файлов, которые будут преобразованы в изображения
+     */
     @Transactional
-    public void saveProduct(Principal principal, ProductDTO productDTO) throws IOException {
+    @Override
+    public void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
+        // Создаем новый объект Product на основе данных из ProductDTO
         Product product = new Product();
         product.setTitle(productDTO.getTitle());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setCity(productDTO.getCity());
         product.setDateOfCreated(productDTO.getDateOfCreated());
+
+        // Устанавливаем пользователя на основе Principal
         product.setUser(userService.getUserByPrincipal(principal));
 
-        productRepository.save(product);
+        //переводим полученные файлы в изображения
+        Image image1 = imageService.toImageEntity(file1);
+        Image image2 = imageService.toImageEntity(file2);
+        Image image3 = imageService.toImageEntity(file3);
+
+        //добавляем изображения к товару
+        imageService.addImageToProduct(product,
+                image1, image2, image3,
+                file1, file2, file3);
+
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
+        Product productFromDb = productRepository.save(product);
+        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId()); //получаем первую (превьюшную) фотографию
+        productRepository.save(product); //сохраняем уже с фото
     }
+
     @Override
     @Transactional
     public void deleteProduct(User user, Long id) {
@@ -107,41 +129,3 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.map(product);
     } //получение товара по id
 }
-
-/**
- * здесь находится метод сохранения товара с возможностью прикрепления трех изображений
- * временно деактивирован и заменен методом без изображений
- */
-//    /**
-//     * Создаем (и сохраняем в БД) новый товар
-//     * @param principal активность пользователя
-//     * @param file1 форма для добавления 3 файлов, которые будут преобразованы в изображения
-//     */
-//    @Override
-//    public void saveProduct(Principal principal, ProductDTO productDTO, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException { //3 формы для добавления фото
-//        // Создаем новый объект Product на основе данных из ProductDTO
-//        Product product = new Product();
-//        product.setTitle(productDTO.getTitle());
-//        product.setDescription(productDTO.getDescription());
-//        product.setPrice(productDTO.getPrice());
-//        product.setCity(productDTO.getCity());
-//        product.setDateOfCreated(productDTO.getDateOfCreated());
-//
-//        // Устанавливаем пользователя на основе Principal
-//        product.setUser(userService.getUserByPrincipal(principal));
-//
-//        //переводим полученные файлы в изображения
-//        Image image1 = imageService.toImageEntity(file1);
-//        Image image2 = imageService.toImageEntity(file2);
-//        Image image3 = imageService.toImageEntity(file3);
-//
-//        //добавляем изображения к товару
-//        imageService.addImageToProduct(product,
-//                image1, image2, image3,
-//                file1, file2, file3);
-//
-//        log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
-//        Product productFromDb = productRepository.save(product);
-//        productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId()); //получаем первую (превьюшную) фотографию
-//        productRepository.save(product); //сохраняем уже с фото
-//    }
