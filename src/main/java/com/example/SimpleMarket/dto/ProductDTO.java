@@ -17,7 +17,7 @@ public class ProductDTO {
 
     private String description;
 
-    private int price;
+    private Integer price;
 
     private String city;
 
@@ -28,7 +28,7 @@ public class ProductDTO {
     private LocalDateTime dateOfCreated;
 
     @Builder
-    public ProductDTO(@NonNull Long id, String title, String description, int price, String city, List<Image> images, Long previewImageId, LocalDateTime dateOfCreated) {
+    public ProductDTO(@NonNull Long id, String title, String description, Integer price, String city, List<Image> images, Long previewImageId, LocalDateTime dateOfCreated) {
         this.id = id;
         this.title = title;
         this.description = description;

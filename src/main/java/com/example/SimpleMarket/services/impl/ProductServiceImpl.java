@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<ProductDTO> getUserProductsAsDTO(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с id: " + userId + "не найден."));
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с id: " + userId + " не найден."));
         List<Product> products = user.getProducts();
         return products.stream()
                 .map(productMapper::map)
@@ -125,7 +125,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + "не найден."));
+                .orElseThrow(() -> new ProductNotFoundException("Товар с id: " + id + " не найден."));
         return productMapper.map(product);
     } //получение товара по id
 }

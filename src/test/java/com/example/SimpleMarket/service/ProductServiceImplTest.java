@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -74,6 +75,34 @@ public class ProductServiceImplTest {
         assertEquals(15, result.get(1).getPrice());
         assertEquals("City2", result.get(1).getCity());
         assertEquals(2L, result.get(1).getPreviewImageId());
+    }
+
+    @Test
+    public void testGetListProductsWithAllNull() {
+        // Создаем тестовый список товаров
+        List<Product> testProducts = Arrays.asList(
+                new Product(1L, null, null, null, null, null, null, null, null),
+                new Product(2L, null, null, null, null, null, null, null, null)
+        );
+
+        when(productRepository.findByTitleLikeIgnoreCase("Product")).thenReturn(testProducts);
+
+        when(productMapper.map(testProducts.get(0))).thenReturn(new ProductDTO(1L, null, null, null, null, null, null, null));
+        when(productMapper.map(testProducts.get(1))).thenReturn(new ProductDTO(2L, null, null, null, null, null, null, null));
+
+        List<ProductDTO> result = productService.getListProducts("Product");
+
+        assertEquals(2, result.size());
+        assertNull(result.get(0).getTitle());
+        assertNull(result.get(0).getDescription());
+        assertNull(result.get(0).getPrice());
+        assertNull(result.get(0).getCity());
+        assertNull(result.get(0).getPreviewImageId());
+        assertNull(result.get(1).getTitle());
+        assertNull(result.get(1).getDescription());
+        assertNull(result.get(1).getPrice());
+        assertNull(result.get(1).getCity());
+        assertNull(result.get(1).getPreviewImageId());
     }
 
     @Test

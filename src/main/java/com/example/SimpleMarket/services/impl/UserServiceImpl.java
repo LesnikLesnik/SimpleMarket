@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
      * Регистрация пользователя
      */
     @Override
+    @Transactional
     public boolean createUser(User user) {
         String email = user.getEmail();
         if (userRepository.findByEmail(email) != null) return false;
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
      * Получение списка всех пользователей
      */
     @Override
+    @Transactional(readOnly = true)
     public List<User> list() {
         return userRepository.findAll();
     }
