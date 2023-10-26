@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private final ProductMapper productMapper;
     private final UserService userService;
+    private final UserRepository userRepository;
     private final ImageServiceImpl imageService;
 
     /**
@@ -53,6 +55,17 @@ public class ProductServiceImpl implements ProductService {
         return Optional.ofNullable(title)
                 .map(productRepository::findByTitleLikeIgnoreCase)
                 .orElseGet(productRepository::findAll);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductDTO> getUserProductsAsDTO(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с id: " + userId + " не найден."));
+        List<Product> products = user.getProducts();
+        return products.stream()
+                .map(productMapper::map)
+                .collect(Collectors.toList());
     }
 
     /**

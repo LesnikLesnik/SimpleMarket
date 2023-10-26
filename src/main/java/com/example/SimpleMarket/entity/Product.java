@@ -26,7 +26,7 @@ public class Product {
     private String description;
 
     @Column(name = "price")
-    private int price;
+    private Integer price;
 
     @Column(name = "city")
     private String city;
