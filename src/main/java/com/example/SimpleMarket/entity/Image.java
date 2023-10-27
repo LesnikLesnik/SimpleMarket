@@ -1,6 +1,9 @@
 package com.example.SimpleMarket.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,9 +32,11 @@ public class Image {
     private boolean isPreviewImage;
     @Lob //означает что данное поле в БД будет храниться в типе LONGBLOG
     @Column(name = "bytes", columnDefinition = "longblob")
+    @JsonIgnore
     private byte[] bytes;
 
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER) //как повлияет действие с сущностью товара на сущность с фотографией
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private Product product;
 }
