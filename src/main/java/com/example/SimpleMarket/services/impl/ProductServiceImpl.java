@@ -5,6 +5,7 @@ import com.example.SimpleMarket.entity.Image;
 import com.example.SimpleMarket.entity.Product;
 import com.example.SimpleMarket.entity.User;
 import com.example.SimpleMarket.exceptions.ProductNotFoundException;
+import com.example.SimpleMarket.exceptions.UserNotFoundException;
 import com.example.SimpleMarket.mapper.ProductMapper;
 import com.example.SimpleMarket.repository.ProductRepository;
 import com.example.SimpleMarket.repository.UserRepository;

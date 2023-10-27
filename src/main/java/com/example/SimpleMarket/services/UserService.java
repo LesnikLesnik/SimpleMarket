@@ -1,5 +1,6 @@
 package com.example.SimpleMarket.services;
 
+import com.example.SimpleMarket.dto.ProductDTO;
 import com.example.SimpleMarket.entity.User;
 
 import java.security.Principal;
@@ -16,4 +17,6 @@ public interface UserService {
 
     void changeUserRoles(User user, Map<String, String> form);
     User getUserByPrincipal(Principal principal);
+
+
 }
