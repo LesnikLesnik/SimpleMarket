@@ -97,8 +97,7 @@ public class ProductServiceImpl implements ProductService {
 
         //добавляем изображения к товару
         imageService.addImageToProduct(product,
-                image1, image2, image3,
-                file1, file2, file3);
+                image1, image2, image3);
 
         log.info("Saving new Product. Title: {}; Author email: {}", product.getTitle(), product.getUser().getEmail());
         Product productFromDb = productRepository.save(product);

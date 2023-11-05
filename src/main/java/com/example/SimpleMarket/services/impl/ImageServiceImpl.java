@@ -5,9 +5,15 @@ import com.example.SimpleMarket.entity.Product;
 import com.example.SimpleMarket.services.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 
 /**
  * Сервис для работы с изображениями
@@ -18,14 +24,25 @@ public class ImageServiceImpl implements ImageService {
     /**
      * Преобразование файла в изображение
      */
+
+    private final String imageDirectory = "C:\\ProjectsPhoto";
     @Override
     public Image toImageEntity(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            return null; // Если файл пустой, то не обрабатываем его
+        }
+
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        Path destinationFilePath = Paths.get(imageDirectory + fileName);
+        Files.copy(file.getInputStream(), destinationFilePath, StandardCopyOption.REPLACE_EXISTING); // Сохраняем файл на диск
+
         Image image = new Image();
-        image.setName(file.getName());
-        image.setOriginalFileName(file.getOriginalFilename());
+        image.setName(fileName);
+        image.setOriginalFileName(fileName);
         image.setContentType(file.getContentType());
         image.setSize(file.getSize());
-        image.setBytes(file.getBytes());
+        image.setPath(destinationFilePath.toString()); // Сохраняем путь к файлу
+
         return image;
     }
 
@@ -35,17 +52,15 @@ public class ImageServiceImpl implements ImageService {
      * @param image1 первое изображение будет отображаться на сайте
      */
     @Override
-    public Product addImageToProduct(Product product,
-                                     Image image1, Image image2, Image image3,
-                                     MultipartFile file1, MultipartFile file2, MultipartFile file3){
-        if (file1.getSize() != 0) {
-            image1.setPreviewImage(true); //делаем изображение превьюшным
+    public Product addImageToProduct(Product product, Image image1, Image image2, Image image3) {
+        if (image1 != null) {
+            image1.setPreviewImage(true);
             product.addImageToProduct(image1);
         }
-        if (file2.getSize() != 0) {
+        if (image2 != null) {
             product.addImageToProduct(image2);
         }
-        if (file3.getSize() != 0) {
+        if (image3 != null) {
             product.addImageToProduct(image3);
         }
         return product;
