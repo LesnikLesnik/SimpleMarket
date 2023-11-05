@@ -3,6 +3,7 @@ package com.example.SimpleMarket.entity;
 
 
 import com.example.SimpleMarket.entity.enums.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,6 +53,7 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    @JsonManagedReference
     private List<Product> products = new ArrayList<>();
     private LocalDateTime dateOfCreated;
     @PrePersist
