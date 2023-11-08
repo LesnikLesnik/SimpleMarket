@@ -21,5 +21,5 @@ public interface UserService {
      * @param password пароль пользователя
      * @return true, если аутентификация успешна, иначе false
      */
-    boolean authenticateUser(String email, String password);
+//    boolean authenticateUser(String email, String password);
 }

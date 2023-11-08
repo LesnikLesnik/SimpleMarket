@@ -41,14 +41,15 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно создан.");
     }
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        if (userService.authenticateUser(user.getEmail(), user.getPassword())) {
-            return ResponseEntity.ok("Аутентификация успешна.");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ошибка аутентификации.");
-        }
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody User user) {
+//
+//        if (userService.authenticateUser(user.getEmail(), user.getPassword())) {
+//            return ResponseEntity.ok("Аутентификация успешна.");
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ошибка аутентификации.");
+//        }
+//    }
 
     @GetMapping("/{id}/products")
     public List<ProductDTO> getUserProducts(@PathVariable Long id) {

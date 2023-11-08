@@ -3,6 +3,7 @@ package com.example.SimpleMarket.services.impl;
 
 import com.example.SimpleMarket.entity.User;
 import com.example.SimpleMarket.entity.enums.Role;
+import com.example.SimpleMarket.exceptions.UserNotFoundException;
 import com.example.SimpleMarket.repository.UserRepository;
 import com.example.SimpleMarket.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -87,17 +88,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь с " + id + " не найден."));
     }
 
-    @Override
-    public boolean authenticateUser(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean authenticateUser(String email, String password) {
+//        User user = userRepository.findByEmail(email);
+//        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+//            return true;
+//        }
+//        return false;
+//    }
 
 
     public User getUserByPrincipal(Principal principal) {
