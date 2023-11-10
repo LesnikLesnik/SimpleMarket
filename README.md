@@ -12,7 +12,7 @@
 # Используемые технологии
 Java 11
 · Maven 
-· Spring Framework
+· MySQL
 · Spring Boot
 · Spring Security
 · RESTful API
@@ -20,3 +20,4 @@ Java 11
 · Lombok
 · Логирование SLF4J
 · JUnit
+· Docker
