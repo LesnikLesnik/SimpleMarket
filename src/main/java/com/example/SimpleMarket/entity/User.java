@@ -21,7 +21,7 @@ import java.util.*;
 @Getter
 @Setter
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -61,38 +61,7 @@ public class User implements UserDetails {
         dateOfCreated = LocalDateTime.now();
     }
 
-    //  security
     public boolean isAdmin() {
         return roles.contains(Role.ADMIN);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
-    }
-
-    @Override
-    public String getUsername() {
-        return email; //не спрашивает пароль, потому что его заменит lomboc
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return active; //тип активности
     }
 }

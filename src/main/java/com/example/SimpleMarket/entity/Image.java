@@ -30,10 +30,12 @@ public class Image {
     private String contentType; //расширение файла
     @Column(name = "isPreviewImage")
     private boolean isPreviewImage;
-    @Lob //означает что данное поле в БД будет храниться в типе LONGBLOG
-    @Column(name = "bytes", columnDefinition = "longblob")
-    @JsonIgnore
-    private byte[] bytes;
+    @Column(name = "path") // Новое поле для хранения пути к файлу
+    private String path;
+//    @Lob //означает что данное поле в БД будет храниться в типе LONGBLOG
+//    @Column(name = "bytes", columnDefinition = "longblob")
+//    @JsonIgnore
+//    private byte[] bytes;
 
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER) //как повлияет действие с сущностью товара на сущность с фотографией
