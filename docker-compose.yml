@@ -1,0 +1,19 @@
+version: '1'
+services:
+  database:
+    image: mysql:latest
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: buysell
+      MYSQL_USER:
+      MYSQL_PASSWORD: root
+    restart: always
+  back:
+    image: simple_market
+      container_name: backend
+    ports:
+        - 8080:8080
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/buysell
+      restart: always
