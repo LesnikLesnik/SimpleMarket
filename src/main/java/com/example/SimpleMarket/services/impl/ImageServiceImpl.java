@@ -29,7 +29,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image toImageEntity(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
-            return null; // Если файл пустой, то не обрабатываем его
+            return null;
         }
 
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
@@ -66,9 +66,5 @@ public class ImageServiceImpl implements ImageService {
         return product;
     }
 
-    /*
-     * будет добавлен функционал для сохранения изображения не в БД.
-     * В БД будет передаваться только путь к файлу на диске
-     */
 
 }
